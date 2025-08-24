@@ -1,3 +1,0 @@
-@echo off
-echo Compiling Java files...
-java -cp ".;lib/mysql-connector-j-9.4.0.jar" src\Main.java -d
