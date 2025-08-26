@@ -90,7 +90,7 @@ public class EBMS {
 			String uname = "root";
 			String password = "8252";
 			Connection con = DriverManager.getConnection(url, uname, password);
-			String q = "insert into register_user(Name, Email, Password, Phone) values(?,?,?,?)";
+			String q = "insert into register_user(Name, Email, Password, Phone, Consumer_No) values(?,?,?,?,?)";
 			PreparedStatement ps = con.prepareStatement(q);
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
@@ -106,9 +106,13 @@ public class EBMS {
 			String Password = br.readLine();
 			ps.setString(3, Password);
 
+			System.out.print("Enter Consumer No.: ");
+			int Consumer = Integer.parseInt(br.readLine());
+			ps.setInt(4, Consumer);
+
 			System.out.print("Enter Phone: ");
 			long Phone = Long.valueOf(br.readLine());
-			ps.setLong(4, Phone);
+			ps.setLong(5, Phone);
 
 			System.out.println("Register Successfully!...");
 			ps.execute();
@@ -145,11 +149,11 @@ public class EBMS {
 						System.out.println(" 1. View Bill");
 						System.out.println(" 2. Pay Bill ");
 						System.out.println(" 3. View Payment History");
-						System.out.println(" 4. View ConsumpƟon Details\r");
+						System.out.println(" 4. View Consumer Details\r");
 						System.out.println(" 5. Register Complaint");
 						System.out.println(" 6. Update Profile/Address");
 						System.out.println(" 7. Contact Vendor's ");
-						System.out.println(" 8. View ConsumpƟon Details\r");
+						System.out.println(" 8. View Consumer Details\r");
 						System.out.println(" 9. Back");
 						System.out.println("==========================");
 						System.out.print("Enter your choice: ");

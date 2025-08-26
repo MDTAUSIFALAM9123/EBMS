@@ -42,7 +42,7 @@ public class Table {
 			String password = "8252";
 			Connection con = DriverManager.getConnection(url, uname, password);
 			Statement st = con.createStatement();
-			String q = "create table register_user(Name varchar(50) not null, Email varchar(50) primary key not null, Password varchar(30) not null, Phone bigint not null)";
+			String q = "create table register_user(Name varchar(50) not null, Email varchar(50) primary key not null, Password varchar(30) not null, Phone bigint not null, Consumer_No int not null)";
 			st.execute(q);
 			System.out.println("Table Created");
 			con.close();
