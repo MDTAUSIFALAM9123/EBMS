@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Random;
 import java.util.Scanner;
-import java.util.function.Consumer;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.Connection;
@@ -244,12 +243,20 @@ public class EBMS {
 					if (choice == 1) {
 
 						Add_Consumer();
+
 					} else if (choice == 2) {
+
 						View_All_Consumer();
 
 					} else if (choice == 3) {
 
-					} else if (choice == 4) {
+						Add_Vendor();
+
+					} else if (choice == 6) {
+
+						View_All_Vendor();
+
+					} else if (choice == 8) {
 						System.out.println("Exiting...");
 						sc.close();
 						System.exit(0);
@@ -418,6 +425,194 @@ public class EBMS {
 			}
 
 			if (consumerCount == 1) {
+				System.out.println("No consumer found.");
+			}
+
+			con.close();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+
+	public void Add_Vendor() {
+		try {
+			String url = "jdbc:mysql://localhost:3306/EBMS";
+			String uname = "root";
+			String password = "8252";
+			Connection con = DriverManager.getConnection(url, uname, password);
+			Scanner sc = new Scanner(System.in);
+			String q = "insert into vendor(Vendor_Id, Full_Name, Father_Name, DOB, Age, Gender, Phone, Aadhar, Email, Qualification, Skills, Certificates, Service_Type, Experince, Address, House_No, City, State, Pincode) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			PreparedStatement ps = con.prepareStatement(q);
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+			System.out.println("-----------Personal Details------------");
+
+			System.out.print("Enter Vendor Id: ");
+			String vendorId = br.readLine();
+			ps.setString(1, vendorId);
+
+			System.out.print("Enter Full Name: ");
+			String fullName = br.readLine();
+			ps.setString(2, fullName);
+
+			System.out.print("Enter Father Name: ");
+			String fatherName = br.readLine();
+			ps.setString(3, fatherName);
+
+			System.out.print("Enter DOB (dd-mm-yyyy): ");
+			String dob = br.readLine();
+			ps.setString(4, dob);
+
+			System.out.print("Enter Age: ");
+			int age = Integer.parseInt(br.readLine());
+			if (age < 18) {
+				System.out.println("Age must be 18 or older to register.");
+				return;
+			}
+			ps.setInt(5, age);
+
+			System.out.print("Enter Gender: ");
+			String gender = br.readLine();
+			ps.setString(6, gender);
+
+			System.out.print("Enter Phone: ");
+			long phone = Long.valueOf(br.readLine());
+			ps.setLong(7, phone);
+
+			System.out.print("Enter Aadhar: ");
+			long aadhar = Long.valueOf(br.readLine());
+			ps.setLong(8, aadhar);
+
+			System.out.print("Enter Email: ");
+			String email = br.readLine();
+			ps.setString(9, email);
+
+			System.out.print("Enter Qualification: ");
+			String qualification = br.readLine();
+			ps.setString(10, qualification);
+
+			System.out.print("Enter Skills: ");
+			String skills = br.readLine();
+			ps.setString(11, skills);
+
+			System.out.print("Enter Certificates: ");
+			String certificates = br.readLine();
+			ps.setString(12, certificates);
+
+			System.out.println("-----------Connection Details------------");
+			System.out.println("Service Type: ");
+			System.out.println("==========================");
+			System.out.println(" 1. Meter Reading");
+			System.out.println(" 2. Meter Installation ");
+			System.out.println(" 3. Maintenance Work ");
+			System.out.println("==========================");
+			System.out.print("Enter your choice: ");
+			String serviceType = "";
+			int choice = sc.nextInt();
+			if (choice == 1) {
+
+				serviceType = "Meter Reading";
+				ps.setString(13, serviceType);
+
+			} else if (choice == 2) {
+
+				serviceType = "Meter Installation";
+				ps.setString(13, serviceType);
+
+			} else if (choice == 3) {
+
+				serviceType = "Maintenance Work";
+				ps.setString(13, serviceType);
+
+			} else {
+				System.out.println("Invalid choice, please try again.");
+			}
+
+			System.out.print("Enter Experinces: ");
+			String experinces = br.readLine();
+			ps.setString(14, experinces);
+
+			System.out.println("-----------Address Details------------");
+			System.out.print("Enter Address: ");
+			String address = br.readLine();
+			ps.setString(15, address);
+
+			System.out.print("Enter House No.: ");
+			int houseNo = Integer.parseInt(br.readLine());
+			ps.setInt(16, houseNo);
+
+			System.out.print("Enter City: ");
+			String city = br.readLine();
+			ps.setString(17, city);
+
+			System.out.print("Enter State: ");
+			String state = br.readLine();
+			ps.setString(18, state);
+
+			System.out.print("Enter Pincode: ");
+			int pincode = Integer.parseInt(br.readLine());
+			ps.setInt(19, pincode);
+
+			ps.executeUpdate();
+			System.out.println("Vendor Added Successfully!......");
+			System.out.println("-------------------Receipt-------------------");
+			System.out.println("Vendor Id: " + vendorId);
+			System.out.println("Full Name: " + fullName);
+			System.out.println("Father Name: " + fatherName);
+			System.out.println("DOB: " + dob);
+			System.out.println("Age: " + age);
+			System.out.println("Phone: " + phone);
+			System.out.println("Aadhar: " + aadhar);
+			System.out.println("Service Type: " + serviceType);
+			System.out.println("Email: " + email);
+			System.out.println("Address: " + address + "," + city + "," + state + "(" + pincode + ")");
+			System.out.println("---------------------------------------------");
+			ps.close();
+			con.close();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+
+	public void View_All_Vendor() {
+		try {
+			String url = "jdbc:mysql://localhost:3306/EBMS";
+			String uname = "root";
+			String password = "8252";
+			Connection con = DriverManager.getConnection(url, uname, password);
+			String q = "select * from vendor";
+			PreparedStatement ps = con.prepareStatement(q);
+			ResultSet rs = ps.executeQuery();
+
+			int vendorCount = 1;
+			System.out.println("\n---------------- Vendor's List ----------------");
+			while (rs.next()) {
+				String vendorId = rs.getString("vendor_Id");
+				String fullName = rs.getString("Full_Name");
+				String fatherName = rs.getString("Father_Name");
+				String serviceType = rs.getString("Service_Type");
+				String experinces = rs.getString("Experince");
+				String phone = rs.getString("Phone");
+				String email = rs.getString("Email");
+				String address = rs.getString("Address");
+				String city = rs.getString("City");
+				String state = rs.getString("State");
+				String pincode = rs.getString("Pincode");
+
+				System.out.println("No. " + vendorCount);
+				System.out.println("vendor Id.: " + vendorId);
+				System.out.println("Full Name: " + fullName);
+				System.out.println("Father's Name: " + fatherName);
+				System.out.println("Service Type: " + serviceType);
+				System.out.println("Experince : " + experinces);
+				System.out.println("Email: " + email);
+				System.out.println("Phone: " + phone);
+				System.out.println("Address: " + address + "," + city + "," + state + "(" + pincode + ")");
+				System.out.println("----------------------------------------------");
+				vendorCount++;
+			}
+
+			if (vendorCount == 1) {
 				System.out.println("No consumer found.");
 			}
 
