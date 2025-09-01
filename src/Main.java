@@ -5,7 +5,5 @@ public class Main {
 		EBMS ms = new EBMS();
 		ms.Connection();
 		ms.showMenu();
-		// ms.CreateDB();
-		// ms.create_table_user();
 	}
 }
