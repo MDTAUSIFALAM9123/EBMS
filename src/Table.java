@@ -58,7 +58,7 @@ public class Table {
 			String password = "8252";
 			Connection con = DriverManager.getConnection(url, uname, password);
 			Statement st = con.createStatement();
-			String q = "create table consumer(Consumer_No varchar(20) not null primary key, Full_Name varchar(50) not null, Father_Name varchar(50) not null, DOB varchar(20) not null, Age int not null, Gender varchar(10) not null, Phone bigint not null, Aadhar bigint not null, Address varchar(100) not null, House_No int not null, City varchar(30) not null, State varchar(30) not null, Pincode int not null, Connection_Type varchar(30) not null, Load_Cap varchar(20) not null)";
+			String q = "create table consumer(Consumer_No varchar(20) not null primary key, Full_Name varchar(50) not null, Father_Name varchar(50) not null, DOB varchar(20) not null, Age int not null, Gender varchar(10) not null, Phone bigint not null, Aadhar bigint not null, Address varchar(100) not null, House_No int not null, City varchar(30) not null, State varchar(30) not null, Pincode int not null, Connection_Type varchar(30) not null, Load_Cap varchar(20) not null, Date varchar(20) not null)";
 			st.execute(q);
 			System.out.println("Table Created");
 			con.close();
@@ -83,13 +83,30 @@ public class Table {
 		}
 	}
 
+	public void Complains() {
+		try {
+			String url = "jdbc:mysql://localhost:3306/EBMS";
+			String uname = "root";
+			String password = "8252";
+			Connection con = DriverManager.getConnection(url, uname, password);
+			Statement st = con.createStatement();
+			String q = "create table complains(Complain_Id varchar(20) not null primary key, Consumer_No varchar(20) not null, Complain_Type varchar(50) not null, Description varchar(200) not null, Status varchar(20) not null, Date varchar(20) not null)";
+			st.execute(q);
+			System.out.println("Table Created");
+			con.close();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+
 	public static void main(String[] args) {
 		Table t1 = new Table();
 		t1.DBConnection();
 		// t1.CreateDB();
 		// t1.create_register_table_user();
 		// t1.add_consumer();
-		t1.add_vendor();
+		// t1.add_vendor();
+		// t1.Complains();
 	}
 
 }

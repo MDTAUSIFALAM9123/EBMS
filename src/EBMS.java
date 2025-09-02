@@ -4,6 +4,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.Random;
 import java.util.Scanner;
 import java.io.BufferedReader;
@@ -11,6 +12,7 @@ import java.io.InputStreamReader;
 import java.sql.Connection;
 
 public class EBMS {
+
 	public void Connection() {
 		try {
 			String url = "jdbc:mysql://localhost:3306/";
@@ -29,12 +31,12 @@ public class EBMS {
 				+ "");
 
 		while (true) {
-			System.out.println("==========================");
+			System.out.println("=======================");
 			System.out.println(" 1. User");
 			System.out.println(" 2. Vendor");
 			System.out.println(" 3. Admin");
 			System.out.println(" 4. Exit");
-			System.out.println("==========================");
+			System.out.println("=======================");
 			System.out.print("Enter your choice: ");
 			int choice = sc.nextInt();
 			if (choice == 1) {
@@ -47,8 +49,7 @@ public class EBMS {
 				Login_Admin();
 			} else if (choice == 4) {
 				System.out.println("Exiting...");
-				sc.close();
-				System.exit(0);
+				break;
 			} else {
 
 				System.out.println("Invalid choice, please try again.");
@@ -68,17 +69,15 @@ public class EBMS {
 			System.out.print("Enter your choice: ");
 			int choice = sc.nextInt();
 			if (choice == 1) {
-
 				User_Register();
+
 			} else if (choice == 2) {
 				User_Login();
 
 			} else if (choice == 3) {
-				System.out.println("Exiting...");
-				sc.close();
-				System.exit(0);
-			} else {
+				return;
 
+			} else {
 				System.out.println("Invalid choice, please try again.");
 			}
 		}
@@ -112,9 +111,10 @@ public class EBMS {
 			long Phone = Long.valueOf(br.readLine());
 			ps.setLong(4, Phone);
 
-			System.out.print("Enter Consumer No.: ");
-			String Consumer = br.readLine();
-			ps.setString(5, Consumer);
+			System.out.print("Enter Consumer No.: CN/SBPDCL/");
+			String numPart = br.readLine();
+			String consumerNo = "CN/SBPDCL/" + numPart;
+			ps.setString(5, consumerNo);
 
 			int random = 0, i, cc, sum = 0;
 			Random rand = new Random();
@@ -160,7 +160,7 @@ public class EBMS {
 			String UserID = sc.nextLine();
 			System.out.print("Enter User Password: ");
 			String UPassword = sc.nextLine();
-			String q = "select *from register_user where Email='" + UserID + "'And Password='" + UPassword + "'";
+			String q = "select * from register_user where Email='" + UserID + "'And Password='" + UPassword + "'";
 			Statement st = con.createStatement();
 			ResultSet rs = st.executeQuery(q);
 
@@ -175,11 +175,11 @@ public class EBMS {
 						System.out.println(" 1. View Bill");
 						System.out.println(" 2. Pay Bill ");
 						System.out.println(" 3. View Payment History");
-						System.out.println(" 4. View Consumer Details\r");
+						System.out.println(" 4. View Consumption Details");
 						System.out.println(" 5. Register Complaint");
 						System.out.println(" 6. Update Profile/Address");
-						System.out.println(" 7. Contact Vendor's ");
-						System.out.println(" 8. View Consumer Details\r");
+						System.out.println(" 7. Contact Vendor's");
+						System.out.println(" 8. Apply For New Connection");
 						System.out.println(" 9. Back");
 						System.out.println("==========================");
 						System.out.print("Enter your choice: ");
@@ -188,14 +188,80 @@ public class EBMS {
 
 						} else if (choice == 2) {
 
-						} else if (choice == 3) {
+						} else if (choice == 5) {
 
-						} else if (choice == 4) {
-							System.out.println("Exiting...");
-							sc.close();
-							System.exit(0);
+							Register_Complain();
+
+						} else if (choice == 6) {
+
+							System.out.println("\n----------------- Update Profile -----------------");
+							System.out.println("Current Profile:");
+							System.out.println("Name: " + rs.getString("Name"));
+							System.out.println("Phone: " + rs.getString("Phone"));
+							System.out.println("Email: " + rs.getString("Email"));
+
+							System.out.println("What do you want to update?");
+							System.out.println("==========================");
+							System.out.println("1. Name");
+							System.out.println("2. Phone");
+							System.out.println("3. Email");
+							System.out.println("4. Back");
+							System.out.println("==========================");
+							System.out.print("Enter your choice: ");
+							int opt = sc.nextInt();
+							sc.nextLine();
+
+							if (opt == 1) {
+								System.out.print("Enter New Name: ");
+								String newName = sc.nextLine();
+								String update = "UPDATE register_user SET Name=? WHERE Email=?";
+								PreparedStatement ps = con.prepareStatement(update);
+								ps.setString(1, newName);
+								ps.setString(2, UserID);
+								ps.executeUpdate();
+								System.out.println("Profile Updated Successfully!....");
+
+							} else if (opt == 2) {
+								System.out.print("Enter New Phone Number: ");
+								String newPhone = sc.nextLine();
+								String update = "UPDATE register_user SET Phone=? WHERE Email=?";
+								PreparedStatement ps = con.prepareStatement(update);
+								ps.setString(1, newPhone);
+								ps.setString(2, UserID);
+								ps.executeUpdate();
+								System.out.println("Profile Updated Successfully!...");
+
+							} else if (opt == 3) {
+								System.out.print("Enter New Email: ");
+								String newEmail = sc.nextLine();
+								String update = "UPDATE register_user SET Email=? WHERE Email=?";
+								PreparedStatement ps = con.prepareStatement(update);
+								ps.setString(1, newEmail);
+								ps.setString(2, UserID);
+								ps.executeUpdate();
+								UserID = newEmail;
+								System.out.println("Profile Updated Successfully!...");
+
+							} else if (opt == 4) {
+								return;
+							} else {
+								System.out.println("Invalid option, try again!");
+							}
+
+							String refreshQuery = "SELECT * FROM register_user WHERE Email=?";
+							PreparedStatement ps2 = con.prepareStatement(refreshQuery);
+							ps2.setString(1, UserID);
+							ResultSet rs2 = ps2.executeQuery();
+							if (rs2.next()) {
+								System.out.println("Updated Profile:");
+								System.out.println("Name: " + rs2.getString("Name"));
+								System.out.println("Phone: " + rs2.getString("Phone"));
+								System.out.println("Email: " + rs2.getString("Email"));
+							}
+
+						} else if (choice == 9) {
+							return;
 						} else {
-
 							System.out.println("Invalid choice, please try again.");
 						}
 					}
@@ -212,13 +278,102 @@ public class EBMS {
 		}
 	}
 
-	public void Login_Admin() {
-
+	public void Register_Complain() {
 		try {
-			String url = "jdbc:mysql://localhost:3306/Assets_MS";
+			String url = "jdbc:mysql://localhost:3306/EBMS";
 			String uname = "root";
 			String password = "8252";
 			Connection con = DriverManager.getConnection(url, uname, password);
+			String getLastId = "SELECT Complain_Id FROM complains ORDER BY Complain_Id DESC LIMIT 1";
+			Scanner sc = new Scanner(System.in);
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(getLastId);
+
+			String newComplainId = "CMP001";
+			if (rs.next()) {
+				String lastId = rs.getString("Complain_Id");
+				int num = Integer.parseInt(lastId.substring(3));
+				num++;
+				newComplainId = String.format("CMP%03d", num);
+			}
+
+			String q = "INSERT INTO complains(Complain_Id, Consumer_No, Complain_Type, Description, Status, Date) VALUES (?,?,?,?,?,?)";
+			PreparedStatement ps = con.prepareStatement(q);
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+			ps.setString(1, newComplainId);
+
+			System.out.print("Enter Consumer No.: CN/SBPDCL/");
+			String numPart = br.readLine();
+			String consumerNo = "CN/SBPDCL/" + numPart;
+			ps.setString(2, consumerNo);
+
+			System.out.println("Complain Type: ");
+			System.out.println("==========================");
+			System.out.println(" 1. Meter Issue");
+			System.out.println(" 2. Wrong Bill");
+			System.out.println(" 3. Power Supply Issue");
+			System.out.println(" 4. High Bill");
+			System.out.println(" 5. Other");
+			System.out.println("==========================");
+			System.out.print("Enter your choice: ");
+			String complainType = "";
+			int choice = sc.nextInt();
+			if (choice == 1) {
+
+				complainType = "Meter Issue";
+				ps.setString(3, complainType);
+
+			} else if (choice == 2) {
+
+				complainType = "Wrong Bill";
+				ps.setString(3, complainType);
+
+			} else if (choice == 3) {
+
+				complainType = "Power Supply Issue";
+				ps.setString(3, complainType);
+
+			} else if (choice == 4) {
+
+				complainType = "High Bill";
+				ps.setString(3, complainType);
+
+			} else if (choice == 5) {
+				System.out.print("Enter Your Problem: ");
+				complainType = br.readLine();
+				ps.setString(3, complainType);
+
+			} else {
+				System.out.println("Invalid choice, please try again.");
+			}
+
+			System.out.print("Enter Description: ");
+			String desc = br.readLine();
+			ps.setString(4, desc);
+
+			ps.setString(5, "Pending");
+
+			java.util.Date utilDate = new java.util.Date();
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+			String formattedDate = sdf.format(utilDate);
+			ps.setString(6, formattedDate);
+
+			ps.executeUpdate();
+			System.out.println("Complain Registered Successfully!...");
+			System.out.println("Complain ID: " + newComplainId);
+			System.out.println("Status: Pending");
+			System.out.println("Date: " + formattedDate);
+
+			ps.close();
+			con.close();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+
+	public void Login_Admin() {
+		try {
 			Scanner sc = new Scanner(System.in);
 			System.out.print("\nEnter User ID: ");
 			String AdminID = sc.nextLine();
@@ -236,7 +391,7 @@ public class EBMS {
 					System.out.println(" 5. Update Unit Cost");
 					System.out.println(" 6. View vendor's ");
 					System.out.println(" 7. View Bill Status");
-					System.out.println(" 8. Back");
+					System.out.println(" 8. Logout");
 					System.out.println("==========================");
 					System.out.print("Enter your choice: ");
 					int choice = sc.nextInt();
@@ -252,23 +407,26 @@ public class EBMS {
 
 						Add_Vendor();
 
+					} else if (choice == 4) {
+
+						View_complains();
+
 					} else if (choice == 6) {
 
 						View_All_Vendor();
 
 					} else if (choice == 8) {
-						System.out.println("Exiting...");
-						sc.close();
-						System.exit(0);
-					} else {
 
+						System.out.println("Logout Successfully!...\n");
+						return;
+
+					} else {
 						System.out.println("Invalid choice, please try again.");
 					}
 				}
 			} else {
 				System.out.println("Invalid User ID and Password");
 			}
-			con.close();
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -281,14 +439,27 @@ public class EBMS {
 			String password = "8252";
 			Connection con = DriverManager.getConnection(url, uname, password);
 			Scanner sc = new Scanner(System.in);
-			String q = "insert into consumer(Consumer_No, Full_Name, Father_Name, DOB, Age, Gender, Phone, Aadhar, Address, House_No, City, State, Pincode, Connection_Type, Load_Cap) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			// Get last Consumer_No
+			String getLastId = "SELECT Consumer_No FROM consumer ORDER BY Consumer_No DESC LIMIT 1";
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(getLastId);
+
+			String newConsumerNo = "CN/SBPDCL/0001";
+			if (rs.next()) {
+				String lastId = rs.getString("Consumer_No");
+				String[] parts = lastId.split("/");
+				int num = Integer.parseInt(parts[2]);
+				num++;
+				newConsumerNo = String.format("CN/SBPDCL/%04d", num);
+			}
+
+			String q = "insert into consumer(Consumer_No, Full_Name, Father_Name, DOB, Age, Gender, Phone, Aadhar, Address, House_No, City, State, Pincode, Connection_Type, Load_Cap, Date) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 			PreparedStatement ps = con.prepareStatement(q);
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-			System.out.println("-----------Personal Details------------");
-			System.out.print("Enter Consumer No.: ");
-			String consumerNo = br.readLine();
-			ps.setString(1, consumerNo);
+			System.out.println("\n-----------Personal Details------------");
+
+			ps.setString(1, newConsumerNo);
 
 			System.out.print("Enter Full Name: ");
 			String fullName = br.readLine();
@@ -370,10 +541,16 @@ public class EBMS {
 			String loadCap = br.readLine();
 			ps.setString(15, loadCap);
 
+			java.util.Date utilDate = new java.util.Date();
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+			String formattedDate = sdf.format(utilDate);
+
+			ps.setString(16, formattedDate);
+
 			ps.executeUpdate();
 			System.out.println("Consumer Added Successfully!......");
 			System.out.println("-------------------Receipt-------------------");
-			System.out.println("Consumer No.: " + consumerNo);
+			System.out.println("Consumer No.: " + newConsumerNo);
 			System.out.println("Full Name: " + fullName);
 			System.out.println("Father Name: " + fatherName);
 			System.out.println("DOB: " + dob);
@@ -402,27 +579,31 @@ public class EBMS {
 			ResultSet rs = ps.executeQuery();
 
 			int consumerCount = 1;
-			while (rs.next()) {
-				String consumerNo = rs.getString("Consumer_No");
-				String fullName = rs.getString("Full_Name");
-				String fatherName = rs.getString("Father_Name");
-				String dob = rs.getString("DOB");
-				String phone = rs.getString("Phone");
-				String address = rs.getString("Address");
-				String city = rs.getString("City");
-				String state = rs.getString("State");
-				String pincode = rs.getString("Pincode");
+			System.out.println(
+					"\n----------------------------------------------------------- Consumer List -----------------------------------------------------------");
+			System.out.printf("%-5s %-20s %-20s %-20s %-12s %-15s %-40s%n",
+					"No.", "Consumer No", "Full Name", "Father's Name", "DOB", "Phone", "Address");
+			System.out.println(
+					"-------------------------------------------------------------------------------------------------------------------------------------");
 
-				System.out.println("\n---------- Consumer No. " + consumerCount + " ----------");
-				System.out.println("Consumer No.: " + consumerNo);
-				System.out.println("Full Name: " + fullName);
-				System.out.println("Father's Name: " + fatherName);
-				System.out.println("Date of Birth: " + dob);
-				System.out.println("Phone: " + phone);
-				System.out.println("Address: " + address + "," + city + "," + state + "(" + pincode + ")");
+			while (rs.next()) {
+
+				System.out.printf("%-5d %-20s %-20s %-20s %-12s %-15s %-40s%n",
+						consumerCount,
+						rs.getString("Consumer_No"),
+						rs.getString("Father_Name"),
+						rs.getString("Father_Name"),
+						rs.getString("DOB"),
+						rs.getString("Phone"),
+						rs.getString("Address")
+								+ "," + rs.getString("City")
+								+ "," + rs.getString("State")
+								+ "(" + rs.getString("Pincode") + ")");
 
 				consumerCount++;
 			}
+			System.out.println(
+					"-------------------------------------------------------------------------------------------------------------------------------------");
 
 			if (consumerCount == 1) {
 				System.out.println("No consumer found.");
@@ -445,7 +626,7 @@ public class EBMS {
 			PreparedStatement ps = con.prepareStatement(q);
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-			System.out.println("-----------Personal Details------------");
+			System.out.println("\n-----------Personal Details------------");
 
 			System.out.print("Enter Vendor Id: ");
 			String vendorId = br.readLine();
@@ -574,6 +755,50 @@ public class EBMS {
 		}
 	}
 
+	public void View_complains() {
+		try {
+			String url = "jdbc:mysql://localhost:3306/EBMS";
+			String uname = "root";
+			String password = "8252";
+			Connection con = DriverManager.getConnection(url, uname, password);
+			String q = "select * from complains";
+			PreparedStatement ps = con.prepareStatement(q);
+			ResultSet rs = ps.executeQuery();
+
+			int complainCount = 1;
+			System.out.println(
+					"\n--------------------------------------------------------- Complains List ---------------------------------------------------------");
+			System.out.printf("%-5s %-12s %-18s %-25s %-40s %-12s %-12s%n", "No.", "ComplainId", "ConsumerNo", "Type",
+					"Description", "Status", "Date");
+			System.out.println(
+					"----------------------------------------------------------------------------------------------------------------------------------");
+
+			while (rs.next()) {
+				String complainId = rs.getString("Complain_Id");
+				String consumerNo = rs.getString("Consumer_No");
+				String complainType = rs.getString("Complain_Type");
+				String description = rs.getString("Description");
+				String status = rs.getString("Status");
+				String date = rs.getString("Date");
+
+				System.out.printf("%-5d %-12s %-18s %-25s %-40s %-12s %-12s%n", complainCount, complainId, consumerNo,
+						complainType, description, status, date);
+
+				complainCount++;
+			}
+			System.out.println(
+					"-----------------------------------------------------------------------------------------------------------------------------------\n");
+
+			if (complainCount == 1) {
+				System.out.println("No complains found.");
+			}
+
+			con.close();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+
 	public void View_All_Vendor() {
 		try {
 			String url = "jdbc:mysql://localhost:3306/EBMS";
@@ -584,36 +809,33 @@ public class EBMS {
 			PreparedStatement ps = con.prepareStatement(q);
 			ResultSet rs = ps.executeQuery();
 
-			int vendorCount = 1;
-			System.out.println("\n---------------- Vendor's List ----------------");
-			while (rs.next()) {
-				String vendorId = rs.getString("vendor_Id");
-				String fullName = rs.getString("Full_Name");
-				String fatherName = rs.getString("Father_Name");
-				String serviceType = rs.getString("Service_Type");
-				String experinces = rs.getString("Experince");
-				String phone = rs.getString("Phone");
-				String email = rs.getString("Email");
-				String address = rs.getString("Address");
-				String city = rs.getString("City");
-				String state = rs.getString("State");
-				String pincode = rs.getString("Pincode");
+			System.out.println(
+					"\n----------------------------------------------------------------------------- Vendor's List -----------------------------------------------------------------------------");
+			System.out.printf("%-5s %-10s %-20s %-20s %-22s %-15s %-15s %-25s %-40s%n",
+					"No.", "Vendor_ID", "Full Name", "Father Name", "Service", "Experience", "Phone", "Email",
+					"Address");
+			System.out.println(
+					"--------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 
-				System.out.println("No. " + vendorCount);
-				System.out.println("vendor Id.: " + vendorId);
-				System.out.println("Full Name: " + fullName);
-				System.out.println("Father's Name: " + fatherName);
-				System.out.println("Service Type: " + serviceType);
-				System.out.println("Experince : " + experinces);
-				System.out.println("Email: " + email);
-				System.out.println("Phone: " + phone);
-				System.out.println("Address: " + address + "," + city + "," + state + "(" + pincode + ")");
-				System.out.println("----------------------------------------------");
+			int vendorCount = 1;
+			while (rs.next()) {
+				System.out.printf("%-5d %-10s %-20s %-20s %-22s %-15s %-15s %-25s %-45s%n",
+						vendorCount,
+						rs.getString("vendor_Id"),
+						rs.getString("Full_Name"),
+						rs.getString("Father_Name"),
+						rs.getString("Service_Type"),
+						rs.getString("Experince"),
+						rs.getString("Phone"),
+						rs.getString("Email"),
+						rs.getString("Address") + "," + rs.getString("City"));
 				vendorCount++;
 			}
+			System.out.println(
+					"--------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 
 			if (vendorCount == 1) {
-				System.out.println("No consumer found.");
+				System.out.println("No vendor found.");
 			}
 
 			con.close();
