@@ -3,6 +3,7 @@ package src;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
+import java.util.Scanner;
 
 public class Table {
 	public void DBConnection() {
@@ -99,6 +100,54 @@ public class Table {
 		}
 	}
 
+	public void Unit() {
+		try {
+			String url = "jdbc:mysql://localhost:3306/EBMS";
+			String uname = "root";
+			String password = "8252";
+			Connection con = DriverManager.getConnection(url, uname, password);
+			Statement st = con.createStatement();
+			String q = "create table Unit(Unit_Id int not null auto_increment primary key, Connection_Type varchar(30) not null, Unit_Price double not null)";
+			st.execute(q);
+			System.out.println("Table Created");
+			con.close();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+
+	public void Generate_Bill() {
+		try {
+			String url = "jdbc:mysql://localhost:3306/EBMS";
+			String uname = "root";
+			String password = "8252";
+			Connection con = DriverManager.getConnection(url, uname, password);
+			Statement st = con.createStatement();
+			String q = "create table bill_generate(Bill_Id int not null auto_increment primary key, Consumer_No varchar(20) not null, Month varchar(20) not null, Current_Reading int not null, Units_Consumed int not null, Per_Unit_Price double not null, Fixed_Charge int not null, Total_Amount double not null, Date varchar(20) not null, Status varchar(20) not null)";
+			st.execute(q);
+			System.out.println("Table Created");
+			con.close();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+
+	public void Payment() {
+		try {
+			String url = "jdbc:mysql://localhost:3306/EBMS";
+			String uname = "root";
+			String password = "8252";
+			Connection con = DriverManager.getConnection(url, uname, password);
+			Statement st = con.createStatement();
+			String q = "create table payment(Txn_Id varchar(20) not null primary key, Consumer_No varchar(20) not null, Method varchar(50) not null, Amount int not null, Date varchar(20) not null, Status varchar(20) not null)";
+			st.execute(q);
+			System.out.println("Table Created");
+			con.close();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+
 	public static void main(String[] args) {
 		Table t1 = new Table();
 		t1.DBConnection();
@@ -107,6 +156,9 @@ public class Table {
 		// t1.add_consumer();
 		// t1.add_vendor();
 		// t1.Complains();
+		// t1.Unit();
+		// t1.Generate_Bill();
+		t1.Payment();
 	}
 
 }
