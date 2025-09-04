@@ -27,16 +27,14 @@ public class EBMS {
 
 	public void showMenu() {
 		Scanner sc = new Scanner(System.in);
-		System.out.println("  ---------------Welcome to Electricity Billing Management System------------------ \r\n"
-				+ "");
-
 		while (true) {
-			System.out.println("=======================");
+			System.out.println("\n--------------- Welcome to Electricity Billing Management System ------------------");
+			System.out.println("====================");
 			System.out.println(" 1. User");
 			System.out.println(" 2. Vendor");
 			System.out.println(" 3. Admin");
 			System.out.println(" 4. Exit");
-			System.out.println("=======================");
+			System.out.println("====================");
 			System.out.print("Enter your choice: ");
 			int choice = sc.nextInt();
 			if (choice == 1) {
@@ -61,11 +59,11 @@ public class EBMS {
 	public void User() {
 		Scanner sc = new Scanner(System.in);
 		while (true) {
-			System.out.println("==========================");
+			System.out.println("====================");
 			System.out.println(" 1. Register");
 			System.out.println(" 2. Login");
 			System.out.println(" 3. Back");
-			System.out.println("==========================");
+			System.out.println("====================");
 			System.out.print("Enter your choice: ");
 			int choice = sc.nextInt();
 			if (choice == 1) {
@@ -168,10 +166,10 @@ public class EBMS {
 				String uemail = rs.getString("Email");
 				String upass = rs.getString("Password");
 				if (UserID.equals(uemail) && UPassword.equals(upass)) {
-					System.out.println("Login Successfully!....");
+					System.out.println("Login Successfully!.... Welcome To " + rs.getString("Name"));
 
 					while (true) {
-						System.out.println("==========================");
+						System.out.println("\n------- User Dashboard -------");
 						System.out.println(" 1. View Bill");
 						System.out.println(" 2. Pay Bill ");
 						System.out.println(" 3. View Payment History");
@@ -181,7 +179,7 @@ public class EBMS {
 						System.out.println(" 7. Contact Vendor's");
 						System.out.println(" 8. Apply For New Connection");
 						System.out.println(" 9. Back");
-						System.out.println("==========================");
+						System.out.println("------------------------------");
 						System.out.print("Enter your choice: ");
 						int choice = sc.nextInt();
 						if (choice == 1) {
@@ -201,12 +199,12 @@ public class EBMS {
 							System.out.println("Email: " + rs.getString("Email"));
 
 							System.out.println("What do you want to update?");
-							System.out.println("==========================");
+							System.out.println("====================");
 							System.out.println("1. Name");
 							System.out.println("2. Phone");
 							System.out.println("3. Email");
 							System.out.println("4. Back");
-							System.out.println("==========================");
+							System.out.println("====================");
 							System.out.print("Enter your choice: ");
 							int opt = sc.nextInt();
 							sc.nextLine();
@@ -303,7 +301,7 @@ public class EBMS {
 
 			ps.setString(1, newComplainId);
 
-			System.out.print("Enter Consumer No.: CN/SBPDCL/");
+			System.out.print("\nEnter Consumer No.: CN/SBPDCL/");
 			String numPart = br.readLine();
 			String consumerNo = "CN/SBPDCL/" + numPart;
 			ps.setString(2, consumerNo);
@@ -360,7 +358,7 @@ public class EBMS {
 			ps.setString(6, formattedDate);
 
 			ps.executeUpdate();
-			System.out.println("Complain Registered Successfully!...");
+			System.out.println("\nComplain Registered Successfully!...");
 			System.out.println("Complain ID: " + newComplainId);
 			System.out.println("Status: Pending");
 			System.out.println("Date: " + formattedDate);
@@ -375,24 +373,24 @@ public class EBMS {
 	public void Login_Admin() {
 		try {
 			Scanner sc = new Scanner(System.in);
-			System.out.print("\nEnter User ID: ");
+			System.out.print("\nEnter Admin ID: ");
 			String AdminID = sc.nextLine();
-			System.out.print("Enter User Password: ");
+			System.out.print("Enter Admin Password: ");
 			int APassword = sc.nextInt();
 			if (AdminID.equals("2030") && APassword == 1234) {
-				System.out.println("Login Successfully!..");
+				System.out.println("Login Successfully!...");
 
 				while (true) {
-					System.out.println("==========================");
+					System.out.println("\n------- Admin Dashboard -------");
 					System.out.println(" 1. Add New Consumer");
 					System.out.println(" 2. View All Consumer ");
 					System.out.println(" 3. Add New Vendor");
 					System.out.println(" 4. View Complains");
 					System.out.println(" 5. Update Unit Cost");
-					System.out.println(" 6. View vendor's ");
+					System.out.println(" 6. View All Vendor's ");
 					System.out.println(" 7. View Bill Status");
 					System.out.println(" 8. Logout");
-					System.out.println("==========================");
+					System.out.println("-------------------------------");
 					System.out.print("Enter your choice: ");
 					int choice = sc.nextInt();
 					if (choice == 1) {
@@ -453,7 +451,7 @@ public class EBMS {
 				newConsumerNo = String.format("CN/SBPDCL/%04d", num);
 			}
 
-			String q = "insert into consumer(Consumer_No, Full_Name, Father_Name, DOB, Age, Gender, Phone, Aadhar, Address, House_No, City, State, Pincode, Connection_Type, Load_Cap, Date) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			String q = "insert into consumer(Consumer_No, Full_Name, Father_Name, DOB, Age, Gender, Phone, Aadhar, Address, House_No, City, State, Pincode, Area, Connection_Type, Load_Cap, Date) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 			PreparedStatement ps = con.prepareStatement(q);
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
@@ -514,6 +512,29 @@ public class EBMS {
 			int pincode = Integer.parseInt(br.readLine());
 			ps.setInt(13, pincode);
 
+			System.out.println("Select Area: ");
+			System.out.println("===================");
+			System.out.println(" 1. Rular");
+			System.out.println(" 2. Urban ");
+			System.out.println("===================");
+			System.out.print("Enter your choice: ");
+			String area = "";
+			int choice = sc.nextInt();
+			if (choice == 1) {
+
+				area = "Rular";
+				ps.setString(14, area);
+
+			} else if (choice == 2) {
+
+				area = "Urban";
+				ps.setString(14, area);
+
+			} else {
+				System.out.println("Invalid choice, please try again.");
+			}
+
+
 			System.out.println("-----------Connection Details------------");
 			System.out.println("Connection Type: ");
 			System.out.println("==========================");
@@ -522,16 +543,16 @@ public class EBMS {
 			System.out.println("==========================");
 			System.out.print("Enter your choice: ");
 			String connectionType = "";
-			int choice = sc.nextInt();
+			 choice = sc.nextInt();
 			if (choice == 1) {
 
 				connectionType = "Domestic";
-				ps.setString(14, connectionType);
+				ps.setString(15, connectionType);
 
 			} else if (choice == 2) {
 
 				connectionType = "Commercial";
-				ps.setString(14, connectionType);
+				ps.setString(15, connectionType);
 
 			} else {
 				System.out.println("Invalid choice, please try again.");
@@ -539,17 +560,17 @@ public class EBMS {
 
 			System.out.print("Enter Load Capacity (in kW): ");
 			String loadCap = br.readLine();
-			ps.setString(15, loadCap);
+			ps.setString(16, loadCap);
 
 			java.util.Date utilDate = new java.util.Date();
 			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 			String formattedDate = sdf.format(utilDate);
 
-			ps.setString(16, formattedDate);
+			ps.setString(17, formattedDate);
 
 			ps.executeUpdate();
 			System.out.println("Consumer Added Successfully!......");
-			System.out.println("-------------------Receipt-------------------");
+			System.out.println("\n------------------ Receipt ------------------");
 			System.out.println("Consumer No.: " + newConsumerNo);
 			System.out.println("Full Name: " + fullName);
 			System.out.println("Father Name: " + fatherName);
@@ -557,6 +578,7 @@ public class EBMS {
 			System.out.println("Age: " + age);
 			System.out.println("Phone: " + phone);
 			System.out.println("Aadhar: " + aadhar);
+			System.out.println("Area: " + area);
 			System.out.println("Connection Type: " + connectionType);
 			System.out.println("Load: " + loadCap);
 			System.out.println("Address: " + address + "," + city + "," + state + "(" + pincode + ")");
@@ -767,11 +789,12 @@ public class EBMS {
 
 			int complainCount = 1;
 			System.out.println(
-					"\n--------------------------------------------------------- Complains List ---------------------------------------------------------");
-			System.out.printf("%-5s %-12s %-18s %-25s %-40s %-12s %-12s%n", "No.", "ComplainId", "ConsumerNo", "Type",
+					"\n----------------------------------------------------------- Complains List -----------------------------------------------------------");
+			System.out.printf("%-5s %-12s %-18s %-30s %-40s %-12s %-12s%n", "No.", "Complain Id", "Consumer No",
+					"Complain Type",
 					"Description", "Status", "Date");
 			System.out.println(
-					"----------------------------------------------------------------------------------------------------------------------------------");
+					"--------------------------------------------------------------------------------------------------------------------------------------");
 
 			while (rs.next()) {
 				String complainId = rs.getString("Complain_Id");
@@ -781,13 +804,13 @@ public class EBMS {
 				String status = rs.getString("Status");
 				String date = rs.getString("Date");
 
-				System.out.printf("%-5d %-12s %-18s %-25s %-40s %-12s %-12s%n", complainCount, complainId, consumerNo,
+				System.out.printf("%-5d %-12s %-18s %-30s %-40s %-12s %-12s%n", complainCount, complainId, consumerNo,
 						complainType, description, status, date);
 
 				complainCount++;
 			}
 			System.out.println(
-					"-----------------------------------------------------------------------------------------------------------------------------------\n");
+					"--------------------------------------------------------------------------------------------------------------------------------------");
 
 			if (complainCount == 1) {
 				System.out.println("No complains found.");
