@@ -3,7 +3,6 @@ package src;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
-import java.util.Scanner;
 
 public class Table {
 	public void DBConnection() {
@@ -139,7 +138,7 @@ public class Table {
 			String password = "8252";
 			Connection con = DriverManager.getConnection(url, uname, password);
 			Statement st = con.createStatement();
-			String q = "create table payment(Txn_Id varchar(20) not null primary key, Consumer_No varchar(20) not null, Method varchar(50) not null, Amount int not null, Date varchar(20) not null, Status varchar(20) not null)";
+			String q = "create table payment(Txn_Id varchar(20) not null primary key, Consumer_No varchar(20) not null, Method varchar(50) not null, Month varchar(20) not null, Amount int not null, Date varchar(20) not null, Status varchar(20) not null)";
 			st.execute(q);
 			System.out.println("Table Created");
 			con.close();

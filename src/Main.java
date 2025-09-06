@@ -2,7 +2,7 @@ package src;
 
 public class Main {
 	public static void main(String[] args) {
-		EBMS ms = new EBMS();
+		Master ms = new Master();
 		// ms.Connection();
 		ms.showMenu();
 	}
